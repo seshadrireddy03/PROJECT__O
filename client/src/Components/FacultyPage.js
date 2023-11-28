@@ -1,10 +1,10 @@
-// VolunterPage.js
+// AdminPage.js
 import React, { useEffect, useState } from "react";
 import "../css/d.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const VolunterPage = () => {
+const AdminPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [filteredResults, setFilteredResults] = useState([]);
@@ -52,14 +52,14 @@ const VolunterPage = () => {
     localStorage.removeItem("token");
   };
 
-  const getVolunter = async () => {
+  const getAdmin = async () => {
     const config = {
       headers: {
         "auth-token": localStorage.getItem("token"),
       },
     };
     const { data } = await axios.post(
-      "http://localhost:4000/api/v1/getvolunter",
+      "http://localhost:4000/api/v1/getadmin",
       "",
       config
     );
@@ -69,7 +69,7 @@ const VolunterPage = () => {
   useEffect(() => {
     return () => {
       
-      localStorage.getItem('token')&&getVolunter();
+      localStorage.getItem('token')&&getAdmin();
     };
   }, []);
 
@@ -78,7 +78,7 @@ const VolunterPage = () => {
     fetchDonors();
     const commentData = {
       donorid: donorId,
-      volunter: user.username,
+      admin: user.username,
       vphone: user.phone,
       accepted: isChecked // Include checkbox status in the comment data
     };
@@ -108,6 +108,7 @@ const VolunterPage = () => {
 
   return (
     <>
+      
       {/* Header */}
       <div className="header" 
          style={{
@@ -209,4 +210,4 @@ const VolunterPage = () => {
   );
 };
 
-export default VolunterPage;
+export default AdminPage;

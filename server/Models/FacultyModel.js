@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-const donorSchema = new mongoose.Schema({
+const facultySchema = new mongoose.Schema({
     username:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     email:{
         type:String,
@@ -13,12 +14,16 @@ const donorSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    phone:{
+        type:String,
+        required:true,
+    },
     dob:{
         type:Date,
         required:true,
     }
 })
 
-const donor= mongoose.model('donor',donorSchema)
+const faculty = mongoose.model('Faculty',facultySchema)
 
-module.exports = donor
+module.exports = faculty

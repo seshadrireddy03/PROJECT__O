@@ -5,17 +5,19 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color:paleturquoise;
+  background-color: #1c2331;
+  color:aliceblue;
 }
 
 /* Top navigation bar */
 .nav{
-  color: rgb(41, 41, 87);
+  color: whitesmoke;
   display:flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  height:50px;
-  background-color: paleturquoise;
+  height:60px;
+  background-color: #1c2331;
+  box-shadow: 0 2px 4px rgb(247, 243, 243);
 }
 .head{
   font-family: 'Poppins', sans-serif;
@@ -23,18 +25,17 @@ body {
 }
 ul{
   display: flex;
-  
+  list-style: none;
 }
 .nav ul li{
-  list-style: none;
   text-decoration: none;
-  display: block;
-  padding:3px 20px;
+  padding: 10px 20px;
   border-radius: 20px;
-  margin: 0 23px;
+  margin: 0 10px;
   cursor: pointer;
   font-weight: 700;
   font-size: 1.1rem;
+  transition: all 0.3s ease;
 }
 .nav ul li:hover{
   font-size: 1rem;

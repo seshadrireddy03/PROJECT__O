@@ -1,30 +1,33 @@
 const express = require('express')
 const router = express.Router()
-const Donor = require('../Models/DonorModel')
+const Student = require('../Models/StudentModel')
 const JWT_SECRET = "Harsha$@"
 var jwt = require('jsonwebtoken')
-const Volunter = require('../Models/VolunterModel')
-const Recipient = require('../Models/RecipientModel')
-router.post('/createdonor',async(req,res)=>{
-    const {username,email,password,dob} = req.body
-    const donor = await Donor.create({
+const Faculty = require('../Models/FacultyModel')
+
+router.post('/createstudent',async(req,res)=>{
+    const {username,email,phone,password,dob,branch,section} = req.body
+    const student = await Student.create({
         username:username,
         email:email,
+        phone:phone,
         password:password,
-        dob:dob
+        dob:dob,
+        branch:branch,
+        section:section,
     })
     const data = {
         user:{
-            id:donor.id,
+            id:student.id,
         }
       }
       const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,donor,authtoken})
+    return res.status(200).json({success:true,student,authtoken})
 })
 
-router.post('/createvolunter',async(req,res)=>{
+router.post('/createfaculty',async(req,res)=>{
     const {username,email,password,phone,dob} = req.body
-    const volunter = await Volunter.create({
+    const faculty = await Faculty.create({
         username:username,
         email:email,
         password:password,
@@ -33,106 +36,66 @@ router.post('/createvolunter',async(req,res)=>{
     })
     const data = {
         user:{
-            id:volunter.id,
+            id:faculty.id,
         }
       }
       const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,volunter,authtoken})
+    return res.status(200).json({success:true,faculty,authtoken})
 })
 
-router.post('/createrecipient',async(req,res)=>{
-    const {username,email,password,phone,dob} = req.body
-    const recipient = await Recipient.create({
-        username:username,
-        email:email,
-        password:password,
-        phone:phone,
-        dob:dob
-    })
-    const data = {
-        user:{
-            id:recipient.id,
-        }
-      }
-      const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,recipient,authtoken})
-})
 
-router.post('/donorlogin',async(req,res)=>{
+
+router.post('/studentlogin',async(req,res)=>{
     const {email,password} = req.body
-    const donor = await Donor.findOne({email:email})
-    if(!donor){
+    const student = await Student.findOne({email:email})
+    if(!student){
         return res.status(200).json({success:false,message:"login with correct credentials"})
     }
-    if(password!==donor.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
+    if(password!==student.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
     const data = {
         user:{
-            id:donor.id,
+            id:student.id,
         }
       }
       const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,donor,authtoken})
+    return res.status(200).json({success:true,student,authtoken})
 })
 
-router.post('/volunterlogin',async(req,res)=>{
+router.post('/facultylogin',async(req,res)=>{
     const {email,password} = req.body
-    const volunter = await Volunter.findOne({email:email})
-    if(!volunter){
+    const faculty = await Faculty.findOne({email:email})
+    if(!faculty){
         return res.status(200).json({success:false,message:"login with correct credentials"})
     }
-    if(password!==volunter.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
+    if(password!==admin.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
     const data = {
         user:{
-            id:volunter.id,
+            id:faculty.id,
         }
       }
       const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,volunter,authtoken})
+    return res.status(200).json({success:true,admin,authtoken})
 })
 
-router.post('/recipientlogin',async(req,res)=>{
-    const {email,password} = req.body
-    const volunter = await Recipient.findOne({email:email})
-    if(!volunter){
-        return res.status(200).json({success:false,message:"login with correct credentials"})
-    }
-    if(password!==volunter.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
-    const data = {
-        user:{
-            id:volunter.id,
-        }
-      }
-      const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,volunter,authtoken})
-})
-
-router.post('/getdonor',async(req,res)=>{
+router.post('/getstudent',async(req,res)=>{
     const token = req.header('auth-token')
     if(!token){
         return res.status(401).json({error:"please use a vaild token"})
     }
-    const donor = jwt.verify(token,JWT_SECRET)
-    const user = await Donor.findById(donor.user.id)
+    const student = jwt.verify(token,JWT_SECRET)
+    const user = await Student.findById(student.user.id)
     return res.status(200).json(user)
 })
 
-router.post('/getvolunter',async(req,res)=>{
+router.post('/getfaculty',async(req,res)=>{
     const token = req.header('auth-token')
     if(!token){
         return res.status(401).json({error:"please use a vaild token"})
     }
-    const volunter = jwt.verify(token,JWT_SECRET)
-    const user = await Volunter.findById(volunter.user.id)
+    const faculty = jwt.verify(token,JWT_SECRET)
+    const user = await Faculty.findById(faculty.user.id)
     return res.status(200).json(user)
 })
-router.post('/getrecipient',async(req,res)=>{
-    const token = req.header('auth-token')
-    if(!token){
-        return res.status(401).json({error:"please use a vaild token"})
-    }
-    const volunter = jwt.verify(token,JWT_SECRET)
-    const user = await Recipient.findById(volunter.user.id)
-    return res.status(200).json(user)
-})
+
 
 module.exports = router
