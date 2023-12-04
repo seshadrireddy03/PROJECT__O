@@ -3,7 +3,7 @@ import "../css/upload.css";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
-const Patient = () => {
+const Upload = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -139,5 +139,5 @@ const Patient = () => {
   );
   };
 
-export default Patient;
+export default Upload;
 
