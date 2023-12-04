@@ -12,8 +12,7 @@ const LoginPage = () => {
           <h2>Project_O</h2>
         </div>
         <ul>
-          <li>Home</li>
-          <li>Service</li>
+          <li>Services</li>
           <li>Contact Us</li>
           <li>About Us</li>
         </ul>

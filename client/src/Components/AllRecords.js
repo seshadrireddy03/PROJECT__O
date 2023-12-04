@@ -75,7 +75,8 @@ const All = () => {
   const filterRecords = (search, semester, domain) => {
     let filtered = records;
     if (search !== '') {
-      filtered = filtered.filter(record => record.name.toLowerCase().includes(search));
+      filtered = filtered.filter(record => record.name.toLowerCase().includes(search) ||
+      record.pname.toLowerCase().includes(search));
     }
     if (semester !== '') {
       filtered = filtered.filter(record => record.sem === semester);
@@ -112,7 +113,7 @@ const All = () => {
       <div className="search-filter">
         <input
           type="text"
-          placeholder="Search by Project Name"
+          placeholder="Search by Project Name or Name of the Developer"
           value={searchInput}
           onChange={handleSearch}
         />

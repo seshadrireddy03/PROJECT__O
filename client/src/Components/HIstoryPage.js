@@ -15,9 +15,15 @@ const Patient = () => {
     const storedUsername = sessionStorage.getItem('username');
     if (storedUsername) {
       setUsername(storedUsername);
+      
     }
   }, []);
 
+  useEffect(() => {
+    if(username){
+      filterRecords(searchInput, selectedSemester, selectedDomain,username);
+    }
+  });
   useEffect(() => {
     // Fetch saved records from the backend
     const fetchRecords = async () => {
@@ -56,25 +62,32 @@ const Patient = () => {
   const handleSearch = (event) => {
     const userInput = event.target.value.toLowerCase();
     setSearchInput(userInput);
-    filterRecords(userInput, selectedSemester, selectedDomain);
+    filterRecords(userInput, selectedSemester, selectedDomain,username);
   };
 
   const handleSemesterFilter = (event) => {
     const selectedValue = event.target.value;
     setSelectedSemester(selectedValue);
-    filterRecords(searchInput, selectedValue, selectedDomain);
+    filterRecords(searchInput, selectedValue, selectedDomain,username);
   };
 
   const handleDomainFilter = (event) => {
     const selectedValue = event.target.value;
     setSelectedDomain(selectedValue);
-    filterRecords(searchInput, selectedSemester, selectedValue);
+    filterRecords(searchInput, selectedSemester, selectedValue,username);
   };
 
-  const filterRecords = (search, semester, domain) => {
+  const filterRecords = (search, semester, domain,username) => {
     let filtered = records;
+    console.log(username);
+
+    if(username !== ''){
+      filtered = filtered.filter(record => record.name === username);
+    }
+    
     if (search !== '') {
-      filtered = filtered.filter(record => record.name.toLowerCase().includes(search));
+      filtered = filtered.filter(record => record.name.toLowerCase().includes(username) ||
+      record.pname.toLowerCase().includes(search));
     }
     if (semester !== '') {
       filtered = filtered.filter(record => record.sem === semester);

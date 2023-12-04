@@ -16,6 +16,7 @@ const StudentRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    try{
     const { data } = await axios.post('http://localhost:4000/api/v1/createstudent', {
       username: nameRef.current.value,
       email: emailRef.current.value,
@@ -26,7 +27,19 @@ const StudentRegister = () => {
       section: sectionRef.current.value 
     })
     if (data.success) {
-      navigate('/Dlogin')
+      navigate('/StudentLogin')
+    }}
+    catch (error) {
+      if (error.response && error.response.data && !error.response.data.success) {
+        // Check if the error response indicates duplicate username
+        if (error.response.data.message === 'Username already exists') {
+          alert('Username already exists. Please choose a different username.');
+        } else {
+          alert('An error occurred during registration.');
+        }
+      } else {
+        alert('An error occurred. Please try again.');
+      }
     }
   }
 

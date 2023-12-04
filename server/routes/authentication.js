@@ -8,6 +8,12 @@ const Image=require('../Models/FormModel')
 
 router.post('/createstudent',async(req,res)=>{
     const {username,email,phone,password,dob,branch,section} = req.body
+    const existingStudent = await Student.findOne({ username });
+
+    if (existingStudent) {
+    // If the username is already taken, return an error response
+     return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
     const student = await Student.create({
         username:username,
         email:email,
@@ -28,6 +34,14 @@ router.post('/createstudent',async(req,res)=>{
 
 router.post('/createfaculty',async(req,res)=>{
     const {email,password,username,phone,dob} = req.body
+
+    const existingFaculty = await Faculty.findOne({ username });
+
+    if (existingFaculty) {
+    // If the username is already taken, return an error response
+     return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
+
     const faculty = await Faculty.create({
         username:username,
         email:email,

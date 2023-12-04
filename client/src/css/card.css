@@ -23,7 +23,7 @@
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* A/* Adjust as needed */
+    justify-content:space-around; /* A/* Adjust as needed */
   }
   
   .card {
@@ -38,6 +38,11 @@
     color: #333;
   
   }
+
+  .card:hover {
+    transform: scale(1.1); /* Increase the size of the card on hover */
+  }
+
   
   /* Card styling for different sections */
   .card p {
