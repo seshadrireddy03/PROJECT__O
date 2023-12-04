@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import "../css/mainpage.css";
+import lap from "../assests/laptop.jpg";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+export const UserContext = createContext();
 const Student = () => {
   const navigate = useNavigate();
   const [user, setuser] = useState();
@@ -32,8 +34,8 @@ const Student = () => {
 
   useEffect(() => {
     if (shouldAnimateUsername) {
-      const usernameToType = user.username;
-
+      const usernameToType = 'Hello  '+user.username+'  !!!';
+      sessionStorage.setItem('username', user.username);
       const typeUsername = async () => {
         for (let i = 0; i <= usernameToType.length; i++) {
           setUsername(usernameToType.slice(0, i));
@@ -57,7 +59,8 @@ const Student = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   const linkStyle = {
-    color: isHovered ? 'black' : 'white',
+    color: isHovered ? '#1c2331' : 'white',
+  
     textDecoration: 'none',
     transition: 'color  ease',
   };
@@ -68,33 +71,46 @@ const Student = () => {
         <div className="head">
           <h2>Project_O</h2>
         </div>
+        <div className="leftnav">
         <ul>
-          <li> <button className="btn-main" onClick={handleLogout}>Logout</button></li> 
+          <li className="btn-main" onClick={handleLogout}>Logout</li>
         </ul>
+        </div>
       </div>
-
-      <div className="maindiv">
-        <div className="typing-effect">
-          <div className="top">
-            <h1>Hello {username}!!! </h1>
+      <div>
+      <div className="lower-body">
+        <div className="top">
+          
+          <img
+       /* src="https://cdn.vectorstock.com/i/1000x1000/06/16/cute-boy-kid-saying-hi-with-black-board-vector-38020616.webp"*/ // Replace with the path to your image
+       src={lap} 
+       alt="Student saying Hi"
+        style={{
+          width: '400px', // Adjust width and height as needed
+          height: '200px', // Makes the image circular
+          opacity: '0.8',         
+        }}
+      />
+        <h1 className="hello-text" >{username}</h1>
+      </div>
+        </div>
+        <div className="maindiv">
+          <div className="typing-effect">
+            <ul style={{ opacity: listItemsVisible ? 1 : 0 }}>
+          
+            <Link to="/UploadPage" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <li><h2>Upload Project</h2></li>
+            </Link>
+          
+            <Link to="/HistoryPage" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <li><h2>My Projects</h2></li>
+            </Link>
+          
+            <Link to="/AllRecords" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <li><h2>All Projects</h2></li>
+            </Link>
+            </ul>
           </div>
-          <ul style={{ opacity: listItemsVisible ? 1 : 0 }}>
-            <li>
-              <Link to="/UploadPage" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                Upload new project
-              </Link>
-            </li>
-            <li>
-              <Link to="/HistoryPage" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                My projects
-              </Link>
-            </li>
-            <li>
-              <Link to="/ProjectsPage" className='buttons' style={linkStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                All Projects
-              </Link>
-            </li>
-          </ul>
         </div>
       </div>
     </div>

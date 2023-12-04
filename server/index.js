@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 
 const auth = require('./routes/authentication')
-//const upload = require('./routes/formupload')
+const upload= require('./routes/form')
 const bodyParser = require("body-parser")
 
 
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors())
 app.use(express.json())
 app.use('/api/v1',auth)
-//app.use('/api/v1',upload)
+app.use('/api/v1',upload)
 app.listen(4000,()=>{
     console.log('app listening on port 4000')
 })

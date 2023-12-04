@@ -1,213 +1,170 @@
-// AdminPage.js
 import React, { useEffect, useState } from "react";
-import "../css/d.css";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import "../css/card.css";
 
-const AdminPage = () => {
+const All = () => {
+  const [records, setRecords] = useState([]);
+  const [filteredRecords, setFilteredRecords] = useState([]);
+  const [searchInput, setSearchInput] = useState(''); // State for search input
+  const [selectedSemester, setSelectedSemester] = useState(''); // State for selected semester filter
+  const [selectedDomain, setSelectedDomain] = useState(''); // State for selected domain filter
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [filteredResults1, setFilteredResults1] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  
-  const handleCityChange = (e) => {
-    setSelectedCity(e.target.value);
-    fetchDonors();
-  };
-  
-  const fetchDonors = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/api/v1/getdonor/${selectedCity}`);
-      
-      if (response.data.success) {
-        setFilteredResults(response.data.data);
-      } else {
-        setFilteredResults()
-        //alert(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
     }
-  };
+  }, []);
 
-  const fetchDonors1 = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/api/v1/getdonor11/${user.username}`);
-      
-      if (response.data.success) {
-        setFilteredResults1(response.data.data);
-      } else {
-        setFilteredResults1()
-        //alert(response.data.message);
+  useEffect(() => {
+    // Fetch saved records from the backend
+    const fetchRecords = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/v1/getRecords`);
+        if (response.data.success) {
+          setRecords(response.data.data);
+          setFilteredRecords(response.data.data); // Initialize filtered records
+        } else {
+          setRecords([]);
+          setFilteredRecords([]);
+          //alert(response.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+        ////alert("Failed to fetch donor details. Please try again later.");
       }
-    } catch (error) {
-      console.error(error);
-      ////alert("Failed to fetch donor details. Please try again later.");
-    }
-  };
-  fetchDonors1();
-  const handleLogout = () => {
-    navigate("/");
-    localStorage.removeItem("token");
-  };
-
-  const getAdmin = async () => {
-    const config = {
-      headers: {
-        "auth-token": localStorage.getItem("token"),
-      },
     };
-    const { data } = await axios.post(
-      "http://localhost:4000/api/v1/getadmin",
-      "",
-      config
-    );
-    setUser(data);
-  };
+      
+    fetchRecords();
+  }, []);
 
   useEffect(() => {
     return () => {
-      
-      localStorage.getItem('token')&&getAdmin();
-    };
-  }, []);
-
-  const handleSubmit = async (donorId, dname, dlocation,description, isChecked) => {
-    // Prepare data for the comment model
-    fetchDonors();
-    const commentData = {
-      donorid: donorId,
-      admin: user.username,
-      vphone: user.phone,
-      accepted: isChecked // Include checkbox status in the comment data
-    };
-
-    
-    try {
-      console.log(commentData);
-      // Send a POST request to store comment in the comment model
-      const response = await axios.post("http://localhost:4000/api/v1/uploadcomment", commentData);
-  
-      if (response.data.success) {
-        // Handle successful comment submission, e.g., remove the donor from the list
-        // setFilteredResults((prevResults) => prevResults.filter((donor) => donor._id !== donorId));
-        
-        
-        // Clear the comment input field after submission
-
-        //alert(response.data.message);
-      } else {
-         //alert(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      //alert("Failed to submit comment. Please try again later.");
+      localStorage.getItem('token')
     }
+  },[])
+  
+  const [isHovered, setIsHovered] = useState(false);
+
+  const linkStyle = {
+    color: isHovered ? 'black' : 'white',
+    textDecoration: 'none',
+    transition: 'color  ease',
+  };
+
+  const handleSearch = (event) => {
+    const userInput = event.target.value.toLowerCase();
+    setSearchInput(userInput);
+    filterRecords(userInput, selectedSemester, selectedDomain);
+  };
+
+  const handleSemesterFilter = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedSemester(selectedValue);
+    filterRecords(searchInput, selectedValue, selectedDomain);
+  };
+
+  const handleDomainFilter = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedDomain(selectedValue);
+    filterRecords(searchInput, selectedSemester, selectedValue);
+  };
+
+  const filterRecords = (search, semester, domain) => {
+    let filtered = records;
+    if (search !== '') {
+      filtered = filtered.filter(record => record.name.toLowerCase().includes(search));
+    }
+    if (semester !== '') {
+      filtered = filtered.filter(record => record.sem === semester);
+    }
+    if (domain !== '') {
+      filtered = filtered.filter(record => record.domain === domain);
+    }
+    setFilteredRecords(filtered);
+  };
+
+  
+  const handleLogout = ()=>{
+    localStorage.removeItem('token')
+    navigate('/')
   };
 
   return (
-    <>
-      
-      {/* Header */}
-      <div className="header" 
-         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
-        <h1>Hi {user?.username}</h1>
-        <button className="log-btn" onClick={handleLogout}>
-          Logout
-        </button>
+    <div className="body-p">
+
+      <div className="nav">
+        <div className="head">
+          <h2>Project_O</h2>
+        </div>
+        <div className="leftnav">
+        <ul>
+          <li className="btn-main" onClick={handleLogout}>Logout</li>
+        </ul>
+        </div> 
       </div>
-      
-      {/* City Dropdown */}
-      <div className="city-dropdown">
-        <label htmlFor="city">Select City:</label>
-        <select id="city" onChange={handleCityChange} value={selectedCity}>
-          <option value="">Select City</option>
-          <option value="Hyderabad">Hyderabad</option>
-          <option value="Delhi">Delhi</option>
-          <option value="Chennai">Chennai</option>
-          <option value="Bangalore">Bangalore</option>
+
+      <div className="search-filter">
+        <input
+          type="text"
+          placeholder="Search by Project Name"
+          value={searchInput}
+          onChange={handleSearch}
+        />
+        <select value={selectedSemester} onChange={handleSemesterFilter}>
+          <option value="">Filter by Semester</option>
+          <option value="1st Sem">1st Sem</option>
+          <option value="2nd Sem">2nd Sem</option>
+          <option value="3rd Sem">3rd Sem</option>
+          <option value="4th Sem">4th Sem</option>
+          <option value="5th Sem">5th Sem</option>
+          <option value="6th Sem">6th Sem</option>
+          <option value="7th Sem">7th Sem</option>
+          <option value="8th Sem">8th Sem</option>
         </select>
-        <button className="fetch-btn" onClick={fetchDonors}>Fetch Donors</button>
+        <select value={selectedDomain} onChange={handleDomainFilter}>
+          <option value="">Filter by Domain</option>
+          <option value="Full Stack">Full Stack</option>
+          <option value="Cyber Security">Cyber Security</option>
+          <option value="Machine Learning">Machine Learning</option>
+          <option value="Artificial intelligance">Artificial intelligance</option>
+        </select>
       </div>
-
-      {/* Donors List */}
-      {filteredResults?.length > 0 ? (
-        filteredResults.map((donor) => {
-          return (
-            <div className="donor-details" key={donor._id} style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}>
-              <div>
-                <p>Donor Name: {donor.name}</p>
-                <p>Location of Donor: {donor.location}</p>
-                <p>Description: {donor.description}</p>
-                <p>Phone No. of Donor: {donor.dphoneno}</p>
-              </div>
-              <div>
-                <p>Recepient Name: {donor.name}</p>
-                <p>Location of Recepient: {donor.location}</p>
-                <p>Phone No. of Recepient: {donor.rphoneno}</p>
-              </div>
-              <div>
-                  <input type="checkbox" id={`accept-${donor._id}`} />
-                  <label htmlFor={`accept-${donor._id}`}>Accept this donor</label>
-                  <button onClick={() => {
-                          handleSubmit(donor._id, donor.name, donor.location, donor.description, document.getElementById(`accept-${donor._id}`).checked);
-                          fetchDonors(); // Call fetchDonors after handleSubmit
-                  }}>Submit</button>
-
-              </div>   
-            </div>
-            
-            
-          );
-        })
-      ) : (
-        <h1>No donors available for the selected city.</h1>
-      )}
-      <h1>History</h1>
-        {filteredResults1?.length > 0 ? (
-        filteredResults1.map((donor) => {
-          return (
-            <div className="donor-details" key={donor._id} style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}>
-                
-              <div>
-                <p>Donor Name: {donor.name}</p>
-                <p>Location of Donor: {donor.location}</p>
-                <p>Phone No. of Donor: {donor.dphoneno}</p>
-              </div>
-              <div>
-                <p>Recepient Name: {donor.rname}</p>
-                <p>Location of Recepient: {donor.location}</p>
-                <p>Phone No. of Recepient: {donor.rphoneno}</p>
-              </div>
-              <div>
-                <p>Description: {donor.description}</p>
-              </div>
-            </div>
-            
-            
-          );
-        })
-      ) : (
-        <h6>No History in the city</h6>
-      )}
-    </>
+      
+      <div className="records">
+      <div className="record-div">
+        {filteredRecords.length > 0 ? (
+            filteredRecords.map((record) => {
+            return (
+              <div
+                className="card"
+                key={record._id}
+                style={{
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  padding: "10px",
+                  margin: "10px 0",
+                }}
+              >
+                <p>Name: {record.name}</p>
+                <p>Name of the project: {record.pname}</p>
+                <p>Phone No.: {record.phoneno}</p>
+                <p>Semester in which project is submitted: {record.sem}</p>
+                <p>description: {record.description}</p>
+                <p>Git: <a href={record.git} target="_blank" rel="noopener noreferrer">{record.git}</a></p>
+                <p>Domain: {record.domain}</p>
+                </div>
+                );
+            })
+          ) : (
+            <h6>No Projects</h6>
+          )}
+      </div>
+    </div>
+    </div>
   );
 };
 
-export default AdminPage;
+export default All;

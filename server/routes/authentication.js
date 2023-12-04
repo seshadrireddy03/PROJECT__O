@@ -4,6 +4,7 @@ const Student = require('../Models/StudentModel')
 const JWT_SECRET = "Harsha$@"
 var jwt = require('jsonwebtoken')
 const Faculty = require('../Models/FacultyModel')
+const Image=require('../Models/FormModel')
 
 router.post('/createstudent',async(req,res)=>{
     const {username,email,phone,password,dob,branch,section} = req.body
@@ -26,7 +27,7 @@ router.post('/createstudent',async(req,res)=>{
 })
 
 router.post('/createfaculty',async(req,res)=>{
-    const {username,email,password,phone,dob} = req.body
+    const {email,password,username,phone,dob} = req.body
     const faculty = await Faculty.create({
         username:username,
         email:email,
@@ -67,14 +68,14 @@ router.post('/facultylogin',async(req,res)=>{
     if(!faculty){
         return res.status(200).json({success:false,message:"login with correct credentials"})
     }
-    if(password!==admin.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
+    if(password!==faculty.password){return res.status(200).json({success:false,message:"login with correct credentials"})}
     const data = {
         user:{
             id:faculty.id,
         }
       }
       const authtoken = jwt.sign(data, JWT_SECRET)
-    return res.status(200).json({success:true,admin,authtoken})
+    return res.status(200).json({success:true,faculty,authtoken})
 })
 
 router.post('/getstudent',async(req,res)=>{
@@ -97,5 +98,36 @@ router.post('/getfaculty',async(req,res)=>{
     return res.status(200).json(user)
 })
 
+router.post('/upload', async (req, res) => {
+    const { pname,name, domain, description, phoneno, git, sem } = req.body;
+    // const File = req.file;
+    console.log(domain);
+    // console.log(File)
+    /* if (!File) {
+      return res.status(400).send({ error: 'File not uploaded or invalid file format' });
+    }
+    cloudinary.uploader.upload(
+        File.path,
+        { resource_type: "auto" },
+        async (err, result) => {
+          if (err || !result || !result.url) {
+            console.log(err || 'Invalid Cloudinary response:', result);
+            return res.status(500).send({ error: 'Error uploading file to Cloudinary' });
+          }
+          console.log('Cloudinary Result:', result); */
+    const newImage = new Image({
+      pname:pname,
+      name: name,
+      domain: domain,
+      description: description,
+      phoneno: phoneno,
+      git: git,
+      sem: sem,
+    });
+    const savedImage = await newImage.save();
+    return res.status(200).send({ savedImage, success: true });
+    // }
+    // )
+  });
 
 module.exports = router

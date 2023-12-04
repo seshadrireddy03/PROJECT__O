@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState} from 'react';
 import '../css/login.css';
 import p from "../assests/d.jpg"
 import { Link, useNavigate } from 'react-router-dom';
@@ -30,6 +30,14 @@ const FacultyLogin = () => {
     }
   };
   
+  const [isHovered, setIsHovered] = useState(false);
+
+  const linkStyle = {
+    color: isHovered ? 'black' : 'white',
+    textDecoration: 'none',
+    transition: 'color  ease',
+  };
+  
   return (
     <>
       <div className='mainbody'>
@@ -38,7 +46,15 @@ const FacultyLogin = () => {
             <h2>Project_O</h2>
           </div>
           <ul>
-            <li>Home</li>
+          <li><Link
+        to="/LoginPage"
+        className='buttons'
+        style={linkStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        Home
+      </Link></li>
             <li>Service</li>
             <li>Contact Us</li>
             <li>About Us</li>

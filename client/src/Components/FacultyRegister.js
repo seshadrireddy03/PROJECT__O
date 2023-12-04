@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import '../css/login.css'; // Make sure this points to the correct path of your CSS file
 import vol from "../assests/d.jpg";
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,10 +21,40 @@ const AdminRegister = () => {
       dob : dobRef.current.value
     })
     if(data.success){
-      navigate('/AdminLogin')
+      navigate('/FacultyLogin')
     }
   }
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  const linkStyle = {
+    color: isHovered ? 'black' : 'white',
+    textDecoration: 'none',
+    transition: 'color  ease',
+  };
+
   return (
+    <>
+          <div className='mainbody'>
+        <div className="nav">
+        <div className="head">
+          <h2>Project_O</h2>
+        </div>
+        <ul>
+        <li><Link
+        to="/LoginPage"
+        className='buttons'
+        style={linkStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        Home
+      </Link></li>
+          <li>Service</li>
+          <li>Contact Us</li>
+          <li>About Us</li>
+        </ul>
+        </div>
     <div className='body'>
     <div className="container-p">
     <img className='img-p' src={vol} alt="Profile" />
@@ -57,7 +87,10 @@ const AdminRegister = () => {
       </div>
     </div>
     </div>
+    </div>
+    </>
   );
+
 };
 
 export default AdminRegister;

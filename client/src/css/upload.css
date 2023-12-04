@@ -24,9 +24,17 @@
   }
   
   /* Additional styles for input fields */
-  input[type="text"],
   textarea,
   select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  input[type="text"],input[type="password"],input[type="date"],input[type="email"]{
     width: 100%;
     padding: 8px;
     margin-top: 1px;

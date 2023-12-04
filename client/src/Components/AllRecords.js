@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import "../css/card.css";
 
-const Patient = () => {
+const All = () => {
   const [records, setRecords] = useState([]);
   const [filteredRecords, setFilteredRecords] = useState([]);
   const [searchInput, setSearchInput] = useState(''); // State for search input
@@ -39,6 +39,7 @@ const Patient = () => {
       
     fetchRecords();
   }, []);
+
   useEffect(() => {
     return () => {
       localStorage.getItem('token')
@@ -52,7 +53,7 @@ const Patient = () => {
     textDecoration: 'none',
     transition: 'color  ease',
   };
-  
+
   const handleSearch = (event) => {
     const userInput = event.target.value.toLowerCase();
     setSearchInput(userInput);
@@ -85,7 +86,7 @@ const Patient = () => {
     setFilteredRecords(filtered);
   };
 
-
+  
   const handleLogout = ()=>{
     localStorage.removeItem('token')
     navigate('/')
@@ -98,16 +99,16 @@ const Patient = () => {
         <div className="head">
           <h2>Project_O</h2>
         </div>
-        <h1>My Projects</h1>
+        <h1>All Projects</h1>
         <div className="leftnav">
         <ul>
           <Link to="/UploadPage"className='buttons1'style={linkStyle}onMouseEnter={() => setIsHovered(true)}onMouseLeave={() => setIsHovered(false)}><li>Upload Project</li></Link>
-          <Link to="/AllRecords"className='buttons1'style={linkStyle}onMouseEnter={() => setIsHovered(true)}onMouseLeave={() => setIsHovered(false)}><li>All Projects</li></Link>
+          <Link to="/HistoryPage"className='buttons1'style={linkStyle}onMouseEnter={() => setIsHovered(true)}onMouseLeave={() => setIsHovered(false)}><li>My Projects</li></Link>
           <li className="btn-main" onClick={handleLogout}>Logout</li>
         </ul>
         </div> 
       </div>
-     
+
       <div className="search-filter">
         <input
           type="text"
@@ -137,7 +138,7 @@ const Patient = () => {
       
       <div className="records">
       <div className="record-div">
-      {filteredRecords.length > 0 ? (
+        {filteredRecords.length > 0 ? (
             filteredRecords.map((record) => {
             return (
               <div
@@ -155,7 +156,6 @@ const Patient = () => {
                 <p>Phone No.: {record.phoneno}</p>
                 <p>Semester in which project is submitted: {record.sem}</p>
                 <p>description: {record.description}</p>
-                <p>Git: <a href={record.git} target="_blank" rel="noopener noreferrer">{record.git}</a></p>
                 <p>Domain: {record.domain}</p>
                 </div>
                 );
@@ -169,4 +169,4 @@ const Patient = () => {
   );
 };
 
-export default Patient;
+export default All;

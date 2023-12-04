@@ -39,6 +39,12 @@
       padding: 10px 20px;
       background-color: #4CAF50;
       color: #fff;
+      font-weight: 700;
       border: none;
       cursor: pointer;
     }
+
+    .form-group button:hover{
+      background-color: #4caf4f79;
+    }
+    

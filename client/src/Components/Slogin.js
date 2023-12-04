@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import '../css/login.css';
 import p from "../assests/p.jpg"
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,13 +16,23 @@ const StudentLogin = () => {
     })
     console.log(data);
     if(data.success){
-      navigate('/StudentPage')
-      localStorage.setItem('token',data.authtoken)
+      navigate('/StudentPage');
+      localStorage.setItem('token',data.authtoken);
+      
     }
     else{
       alert(data.message)
     }
   }
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  const linkStyle = {
+    color: isHovered ? 'black' : 'white',
+    textDecoration: 'none',
+    transition: 'color  ease',
+  };
+
   return (
     <>
     <div className='mainbody'>
@@ -31,7 +41,15 @@ const StudentLogin = () => {
           <h2>Project_O</h2>
         </div>
         <ul>
-          <li>Home</li>
+        <li><Link
+        to="/LoginPage"
+        className='buttons'
+        style={linkStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        Home
+      </Link></li>
           <li>Service</li>
           <li>Contact Us</li>
           <li>About Us</li>
@@ -52,7 +70,7 @@ const StudentLogin = () => {
         <div className="form-group">
           <button type='submit'>Login</button>
         </div>
-        <p>Dont have an account <Link to='/StudentRegister' style={{ color: 'blue' }}>Register</Link></p>
+        <p>Dont have an account? <Link to='/StudentRegister' style={{ color: 'blue' }}>Register</Link></p>
       </form>
       </div>
       </div>
